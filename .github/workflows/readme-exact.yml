@@ -3,9 +3,14 @@ name: README example verbatim
 on:
   pull_request:
 
+permissions:
+  pull-requests: write
+  security-events: write
+  contents: read
+
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: kiff/kiff-scan@v0.1.0
+      - uses: kiff/kiff-scan@v0.1.1

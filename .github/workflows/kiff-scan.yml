@@ -16,7 +16,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - id: kiff
-        uses: kiff/kiff-scan@v0.1.0
+        continue-on-error: true
+        uses: kiff/kiff-scan@v0.1.1
+        with:
+          config: .kiff-scan.json
+          fail-on: high
 
       - name: Verify action outputs and SARIF
         env:
@@ -24,8 +28,10 @@ jobs:
           REVIEW_REQUIRED: ${{ steps.kiff.outputs.review-required }}
           HIGH_COUNT: ${{ steps.kiff.outputs.high-count }}
           SARIF_PATH: ${{ steps.kiff.outputs.sarif-path }}
+          ACTION_OUTCOME: ${{ steps.kiff.outcome }}
         run: |
           set -euo pipefail
+          test "$ACTION_OUTCOME" = "failure"
           test "$FINDINGS_COUNT" = "1"
           test "$REVIEW_REQUIRED" = "1"
           test "$HIGH_COUNT" = "1"
