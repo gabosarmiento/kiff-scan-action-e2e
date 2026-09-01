@@ -1,7 +1,7 @@
-def tool(fn):
+def consumer_tool(fn):
     return fn
 
 
-@tool
+@consumer_tool
 def drop_database(client, name):
     return client.drop_database(name)
