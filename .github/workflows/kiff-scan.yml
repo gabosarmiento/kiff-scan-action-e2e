@@ -17,9 +17,8 @@ jobs:
 
       - id: kiff
         continue-on-error: true
-        uses: kiff/kiff-scan@codex/action-v0.1.1
+        uses: kiff/kiff-scan@v0.1.1
         with:
-          version: "0.1.0"
           config: .kiff-scan.json
           fail-on: high
 
