@@ -1,0 +1,33 @@
+name: kiff-scan E2E
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: kiff
+        uses: kiff/kiff-scan@v0.1.0
+
+      - name: Verify action outputs and SARIF
+        env:
+          FINDINGS_COUNT: ${{ steps.kiff.outputs.findings-count }}
+          REVIEW_REQUIRED: ${{ steps.kiff.outputs.review-required }}
+          HIGH_COUNT: ${{ steps.kiff.outputs.high-count }}
+          SARIF_PATH: ${{ steps.kiff.outputs.sarif-path }}
+        run: |
+          set -euo pipefail
+          test "$FINDINGS_COUNT" = "1"
+          test "$REVIEW_REQUIRED" = "1"
+          test "$HIGH_COUNT" = "1"
+          test "$SARIF_PATH" = "kiff-scan.sarif"
+          test -s "$SARIF_PATH"
